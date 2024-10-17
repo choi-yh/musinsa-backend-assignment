@@ -1,17 +1,25 @@
 package choiyh.musinsabackendassignment.controller;
 
+import choiyh.musinsabackendassignment.service.ProductService;
 import jdk.jfr.Description;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/products")
 public class ProductController {
+
+    private final ProductService productService;
 
     @GetMapping("/categories/lowest-prices")
     @Description("1. 카테고리별 최저 가격 브랜드와 상품 가격, 총액을 조회합니다.")
     public ResponseEntity<?> getLowestPriceBrandByCategory() {
-        return ResponseEntity.ok().build();
+        Map<String, Object> result = productService.getLowestPriceBrandByCategory();
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/categories/{category}/lowest-highest")
