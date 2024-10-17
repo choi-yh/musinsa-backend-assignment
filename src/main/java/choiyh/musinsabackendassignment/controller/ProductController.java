@@ -25,7 +25,8 @@ public class ProductController {
     @GetMapping("/categories/{category}/lowest-highest")
     @Description("3. 카테고리명으로 최저, 최고 가격 브랜드와 상품 가격을 조회합니다.")
     public ResponseEntity<?> getLowestHighestBrandByCategory(@PathVariable String category) {
-        return ResponseEntity.ok().build();
+        Map<String, Object> result = productService.getLowestHighestBrandByCategory(category);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping

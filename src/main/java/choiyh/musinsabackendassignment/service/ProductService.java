@@ -47,4 +47,41 @@ public class ProductService {
         return result;
     }
 
+    // TODO: DTO 정의
+    @Transactional
+    public Map<String, Object> getLowestHighestBrandByCategory(String category) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("category", category);
+
+        List<Product> products = productRepository.findByCategory(category);
+
+        if (products.isEmpty()) {
+            // TODO: 주어진 카테고리가 아닌 경우에 대한 처리 필요. (예외 발생)
+            return result;
+        }
+
+        // TODO: 가독성 좋게 리팩토링
+        Product lowestProduct = products.stream()
+                .min(Comparator.comparing(Product::getPrice))
+                .get();
+        Map<String, String> lowestData = new HashMap<>();
+        lowestData.put("brand", lowestProduct.getBrand().getName());
+        lowestData.put("price", PriceUtil.priceFormattingWithComma(lowestProduct.getPrice()));
+
+        result.put("lowest_price", lowestData);
+
+        Product highestProduct = products.stream()
+                .max(Comparator.comparing(Product::getPrice))
+                .get();
+
+        Map<String, String> highestData = new HashMap<>();
+        highestData.put("brand", highestProduct.getBrand().getName());
+        highestData.put("price", PriceUtil.priceFormattingWithComma(highestProduct.getPrice()));
+
+        result.put("highest_price", highestData);
+
+
+        return result;
+    }
+
 }
