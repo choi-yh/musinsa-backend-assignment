@@ -1,11 +1,14 @@
 package choiyh.musinsabackendassignment.controller;
 
+import choiyh.musinsabackendassignment.dto.BrandRequest;
 import choiyh.musinsabackendassignment.service.BrandService;
 import jdk.jfr.Description;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Map;
 
 @RestController
@@ -24,19 +27,26 @@ public class BrandController {
 
     @PostMapping
     @Description("4. 브랜드를 추가합니다.")
-    public ResponseEntity<?> add() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> add(@RequestBody BrandRequest request) {
+        Long id = brandService.add(request);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(id)
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
-    @PatchMapping
+    @PatchMapping("/{id}")
     @Description("4. 브랜드를 업데이트합니다.")
-    public ResponseEntity<?> update() {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody BrandRequest request) {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @Description("4. 브랜드를 삭제합니다.")
-    public ResponseEntity<?> delete() {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         return ResponseEntity.ok().build();
     }
 

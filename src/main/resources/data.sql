@@ -1,13 +1,13 @@
-INSERT INTO brand (id, name)
-VALUES (1, 'A'),
-       (2, 'B'),
-       (3, 'C'),
-       (4, 'D'),
-       (5, 'E'),
-       (6, 'F'),
-       (7, 'G'),
-       (8, 'H'),
-       (9, 'I');
+INSERT INTO brand (name)
+VALUES ('A'),
+       ('B'),
+       ('C'),
+       ('D'),
+       ('E'),
+       ('F'),
+       ('G'),
+       ('H'),
+       ('I');
 
 -- A
 INSERT INTO product (category, price, brand_id)

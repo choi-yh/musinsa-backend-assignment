@@ -1,16 +1,16 @@
 package choiyh.musinsabackendassignment.service;
 
+import choiyh.musinsabackendassignment.dto.BrandRequest;
+import choiyh.musinsabackendassignment.dto.ProductRequest;
 import choiyh.musinsabackendassignment.entity.Brand;
 import choiyh.musinsabackendassignment.entity.Product;
 import choiyh.musinsabackendassignment.repository.BrandRepository;
 import choiyh.musinsabackendassignment.util.PriceUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,6 +50,25 @@ public class BrandService {
         result.put("lowest_price", data);
 
         return result;
+    }
+
+    @Transactional
+    public Long add(BrandRequest request) {
+        // TODO: 중복된 브랜드명 처리는 고민해 볼 것
+        List<Product> products = new ArrayList<>();
+        if (request.getProducts() != null) {
+            products = request.getProducts().stream()
+                    .map(ProductRequest::toEntity)
+                    .toList();
+        }
+
+        Brand brand = Brand.builder()
+                .name(request.getName())
+                .products(products)
+                .build();
+        brandRepository.save(brand);
+
+        return brand.getId();
     }
 
 }
