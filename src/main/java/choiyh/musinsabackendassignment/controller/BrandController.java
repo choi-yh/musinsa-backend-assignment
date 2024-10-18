@@ -1,17 +1,25 @@
 package choiyh.musinsabackendassignment.controller;
 
+import choiyh.musinsabackendassignment.service.BrandService;
 import jdk.jfr.Description;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/brands")
 public class BrandController {
+
+    private final BrandService brandService;
 
     @GetMapping("/lowest-price")
     @Description("2. 단일 브랜드 구매시 최저가인 브랜드 정보를 조회합니다.")
     public ResponseEntity<?> getLowestPriceByBrand() {
-        return ResponseEntity.ok().build();
+        Map<String, Object> response = brandService.getLowestPriceByBrand();
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
