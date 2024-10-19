@@ -4,6 +4,7 @@ import choiyh.musinsabackendassignment.dto.BrandRequest;
 import choiyh.musinsabackendassignment.dto.ProductRequest;
 import choiyh.musinsabackendassignment.entity.Brand;
 import choiyh.musinsabackendassignment.entity.Product;
+import choiyh.musinsabackendassignment.enums.Category;
 import choiyh.musinsabackendassignment.repository.BrandRepository;
 import choiyh.musinsabackendassignment.util.PriceUtil;
 import jakarta.transaction.Transactional;
@@ -40,11 +41,11 @@ public class BrandService {
                 .mapToInt(Product::getPrice)
                 .sum();
 
-        Map<String, Object> categoryValues = lowestPriceBrand.getProducts().stream()
+        Map<Category, Object> categoryValues = lowestPriceBrand.getProducts().stream()
                 .collect(Collectors.toMap(Product::getCategory, p -> PriceUtil.priceFormattingWithComma(p.getPrice())));
 
         data.put("brand", lowestPriceBrand.getName());
-        data.put("total_price", totalPrice);
+        data.put("total_price", PriceUtil.priceFormattingWithComma(totalPrice));
         data.put("category", categoryValues);
 
         result.put("lowest_price", data);

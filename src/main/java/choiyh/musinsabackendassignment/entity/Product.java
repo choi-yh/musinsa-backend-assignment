@@ -1,5 +1,7 @@
 package choiyh.musinsabackendassignment.entity;
 
+import choiyh.musinsabackendassignment.enums.Category;
+import choiyh.musinsabackendassignment.enums.CategoryConverter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,7 +20,8 @@ public class Product {
     private Long id;
 
     @Column(name = "category", nullable = false)
-    private String category; // TODO: 테이블 따로 분리해도 좋을듯함. values 를 따로 enum 으로 관리
+    @Convert(converter = CategoryConverter.class)
+    private Category category;
 
     // 무신사 특성상 가격 정보에 소수점을 사용하지 않으니 Integer 가 좋을듯함.
     @Column(name = "price", nullable = false)
@@ -29,7 +32,7 @@ public class Product {
     private Brand brand;
 
     @Builder
-    public Product(String category, Integer price, Brand brand) {
+    public Product(Category category, Integer price, Brand brand) {
         this.category = category;
         this.price = price;
         this.brand = brand;
