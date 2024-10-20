@@ -106,4 +106,10 @@ public class ProductService {
         return product.getId();
     }
 
+    public void delete(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 brand id 입니다.")); // TODO: error handling
+        productRepository.delete(product);
+    }
+
 }

@@ -51,10 +51,11 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @Description("4. 상품을 삭제합니다.")
-    public ResponseEntity<?> delete() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

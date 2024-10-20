@@ -14,7 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -79,6 +81,36 @@ class ProductControllerTests {
         // then
         // TODO: custom exception 정의 후 해당 값과 코드로 비교할 것.
         response.andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    @DisplayName("4. 상품 삭제 API 성공 케이스")
+    @Description("204 상태 코드를 응답합니다.")
+    public void delete_success() throws Exception {
+        // given
+        Long targetProductId = 1L;
+        doNothing().when(productService).delete(targetProductId);
+
+        // when
+        ResultActions response = mockMvc.perform(delete("/api/v1/products/" + targetProductId));
+
+        // then
+        response.andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("4. 상품 삭제 API 실패 케이스")
+    @Description("") // TODO: exception handling
+    public void delete_fail_with_invalid_product_id() throws Exception {
+        // given
+        Long targetProductId = 1L;
+        doThrow(new IllegalArgumentException("존재하지 않는 brand id 입니다.")).when(productService).delete(targetProductId);
+
+        // when
+        ResultActions response = mockMvc.perform(delete("/api/v1/products/" + targetProductId));
+
+        // then
+        response.andExpect(result -> assertInstanceOf(IllegalArgumentException.class, result.getResolvedException())); // TODO: exception handling
     }
 
 }
