@@ -1,7 +1,10 @@
 package choiyh.musinsabackendassignment.service;
 
+import choiyh.musinsabackendassignment.dto.ProductRequest;
+import choiyh.musinsabackendassignment.entity.Brand;
 import choiyh.musinsabackendassignment.entity.Product;
 import choiyh.musinsabackendassignment.enums.Category;
+import choiyh.musinsabackendassignment.repository.BrandRepository;
 import choiyh.musinsabackendassignment.repository.ProductRepository;
 import choiyh.musinsabackendassignment.util.PriceUtil;
 import jakarta.transaction.Transactional;
@@ -15,6 +18,8 @@ import java.util.*;
 public class ProductService {
 
     private final ProductRepository productRepository;
+
+    private final BrandRepository brandRepository;
 
     // TODO: DTO 정의
     @Transactional
@@ -82,6 +87,23 @@ public class ProductService {
 
 
         return result;
+    }
+
+    @Transactional
+    public Long add(ProductRequest request) {
+        Brand brand = brandRepository.findById(request.getBrandId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 brand id 입니다.")); // TODO: error handling
+
+        Product product = Product.builder()
+                .category(request.getCategory())
+                .price(request.getPrice())
+                .build();
+
+        product.mappingBrand(brand);
+
+        productRepository.save(product);
+
+        return product.getId();
     }
 
 }

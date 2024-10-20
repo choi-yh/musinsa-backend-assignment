@@ -1,11 +1,14 @@
 package choiyh.musinsabackendassignment.controller;
 
+import choiyh.musinsabackendassignment.dto.ProductRequest;
 import choiyh.musinsabackendassignment.service.ProductService;
 import jdk.jfr.Description;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Map;
 
 @RestController
@@ -31,8 +34,15 @@ public class ProductController {
 
     @PostMapping
     @Description("4. 상품을 추가합니다.")
-    public ResponseEntity<?> add() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> add(@RequestBody ProductRequest request) {
+        Long id = productService.add(request);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(id)
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
     @PatchMapping
