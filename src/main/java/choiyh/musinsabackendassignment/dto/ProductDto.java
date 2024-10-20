@@ -2,13 +2,15 @@ package choiyh.musinsabackendassignment.dto;
 
 import choiyh.musinsabackendassignment.entity.Product;
 import choiyh.musinsabackendassignment.util.PriceUtil;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 
 @Builder
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductDto {
 
     private String category;

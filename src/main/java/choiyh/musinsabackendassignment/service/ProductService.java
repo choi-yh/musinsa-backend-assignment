@@ -1,9 +1,6 @@
 package choiyh.musinsabackendassignment.service;
 
-import choiyh.musinsabackendassignment.dto.AddProductRequest;
-import choiyh.musinsabackendassignment.dto.ProductDto;
-import choiyh.musinsabackendassignment.dto.LowestPriceBrandByCategoryResponse;
-import choiyh.musinsabackendassignment.dto.UpdateProductRequest;
+import choiyh.musinsabackendassignment.dto.*;
 import choiyh.musinsabackendassignment.entity.Brand;
 import choiyh.musinsabackendassignment.entity.Product;
 import choiyh.musinsabackendassignment.enums.Category;
@@ -50,14 +47,11 @@ public class ProductService {
         return result;
     }
 
-    // TODO: DTO 정의
     @Transactional
-    public Map<String, Object> getLowestHighestBrandByCategory(String category) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("category", category);
+    public LowestHighestPriceBrandByCategoryResponse getLowestHighestPriceBrandByCategory(String category) {
+        LowestHighestPriceBrandByCategoryResponse result = new LowestHighestPriceBrandByCategoryResponse();
 
         List<Product> products = productRepository.findByCategory(Category.getCategoryFromKorean(category));
-
         if (products.isEmpty()) {
             // TODO: 주어진 카테고리가 아닌 경우에 대한 처리 필요. (예외 발생)
             return result;
@@ -67,22 +61,22 @@ public class ProductService {
         Product lowestProduct = products.stream()
                 .min(Comparator.comparing(Product::getPrice))
                 .get();
-        Map<String, String> lowestData = new HashMap<>();
-        lowestData.put("brand", lowestProduct.getBrand().getName());
-        lowestData.put("price", PriceUtil.priceFormattingWithComma(lowestProduct.getPrice()));
 
-        result.put("lowest_price", lowestData);
+        ProductDto lowestData = new ProductDto();
+        lowestData.setBrand(lowestProduct.getBrand().getName());
+        lowestData.setPrice(PriceUtil.priceFormattingWithComma(lowestProduct.getPrice()));
 
         Product highestProduct = products.stream()
                 .max(Comparator.comparing(Product::getPrice))
-                .get();
+                .get(); // TODO: check
 
-        Map<String, String> highestData = new HashMap<>();
-        highestData.put("brand", highestProduct.getBrand().getName());
-        highestData.put("price", PriceUtil.priceFormattingWithComma(highestProduct.getPrice()));
+        ProductDto highestData = new ProductDto();
+        highestData.setBrand(highestProduct.getBrand().getName());
+        highestData.setPrice(PriceUtil.priceFormattingWithComma(highestProduct.getPrice()));
 
-        result.put("highest_price", highestData);
-
+        result.setLowestPrice(lowestData);
+        result.setCategory(category);
+        result.setHighestPrice(highestData);
 
         return result;
     }

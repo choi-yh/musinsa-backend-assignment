@@ -1,6 +1,7 @@
 package choiyh.musinsabackendassignment.controller;
 
 import choiyh.musinsabackendassignment.dto.AddProductRequest;
+import choiyh.musinsabackendassignment.dto.LowestHighestPriceBrandByCategoryResponse;
 import choiyh.musinsabackendassignment.dto.LowestPriceBrandByCategoryResponse;
 import choiyh.musinsabackendassignment.dto.UpdateProductRequest;
 import choiyh.musinsabackendassignment.service.ProductService;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,9 +28,8 @@ public class ProductController {
 
     @GetMapping("/categories/{category}/lowest-highest")
     @Description("3. 카테고리명으로 최저, 최고 가격 브랜드와 상품 가격을 조회합니다.")
-    public ResponseEntity<?> getLowestHighestBrandByCategory(@PathVariable String category) {
-        Map<String, Object> result = productService.getLowestHighestBrandByCategory(category);
-        return ResponseEntity.ok(result);
+    public LowestHighestPriceBrandByCategoryResponse getLowestHighestBrandByCategory(@PathVariable String category) {
+        return productService.getLowestHighestPriceBrandByCategory(category);
     }
 
     @PostMapping
