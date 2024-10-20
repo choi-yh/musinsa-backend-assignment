@@ -1,18 +1,17 @@
 package choiyh.musinsabackendassignment.service;
 
-import choiyh.musinsabackendassignment.dto.BrandRequest;
-import choiyh.musinsabackendassignment.dto.AddProductRequest;
+import choiyh.musinsabackendassignment.dto.*;
 import choiyh.musinsabackendassignment.entity.Brand;
 import choiyh.musinsabackendassignment.entity.Product;
-import choiyh.musinsabackendassignment.enums.Category;
 import choiyh.musinsabackendassignment.repository.BrandRepository;
 import choiyh.musinsabackendassignment.util.PriceUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +20,9 @@ public class BrandService {
     private final BrandRepository brandRepository;
 
     // TODO: DTO 정의
-    public Map<String, Object> getLowestPriceByBrand() {
-        Map<String, Object> result = new HashMap<>();
-        Map<String, Object> data = new HashMap<>();
+    public LowestPriceByBrandResponse getLowestPriceByBrand() {
+        LowestPriceByBrandResponse result = new LowestPriceByBrandResponse();
+        LowestPriceByBrand data = new LowestPriceByBrand();
 
         List<Brand> brands = brandRepository.findAll(); // TODO: 현재는 데이터가 적지만, 데이터가 많아지게 되는 경우 고려 할 것
 
@@ -41,14 +40,20 @@ public class BrandService {
                 .mapToInt(Product::getPrice)
                 .sum();
 
-        Map<Category, Object> categoryValues = lowestPriceBrand.getProducts().stream()
-                .collect(Collectors.toMap(Product::getCategory, p -> PriceUtil.priceFormattingWithComma(p.getPrice())));
+        List<ProductDto> categoryValues = lowestPriceBrand.getProducts().stream()
+                .map(
+                        p -> ProductDto.builder()
+                                .category(p.getCategory().toString())
+                                .price(PriceUtil.priceFormattingWithComma(p.getPrice()))
+                                .build()
+                )
+                .toList();
 
-        data.put("brand", lowestPriceBrand.getName());
-        data.put("total_price", PriceUtil.priceFormattingWithComma(totalPrice));
-        data.put("category", categoryValues);
+        data.setBrand(lowestPriceBrand.getName());
+        data.setTotal(PriceUtil.priceFormattingWithComma(totalPrice));
+        data.setProducts(categoryValues);
 
-        result.put("lowest_price", data);
+        result.setLowestPrice(data);
 
         return result;
     }

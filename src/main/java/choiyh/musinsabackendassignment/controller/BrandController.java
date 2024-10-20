@@ -1,6 +1,7 @@
 package choiyh.musinsabackendassignment.controller;
 
 import choiyh.musinsabackendassignment.dto.BrandRequest;
+import choiyh.musinsabackendassignment.dto.LowestPriceByBrandResponse;
 import choiyh.musinsabackendassignment.service.BrandService;
 import jdk.jfr.Description;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,9 +20,8 @@ public class BrandController {
 
     @GetMapping("/lowest-price")
     @Description("2. 단일 브랜드 구매시 최저가인 브랜드 정보를 조회합니다.")
-    public ResponseEntity<?> getLowestPriceByBrand() {
-        Map<String, Object> response = brandService.getLowestPriceByBrand();
-        return ResponseEntity.ok(response);
+    public LowestPriceByBrandResponse getLowestPriceByBrand() {
+        return brandService.getLowestPriceByBrand();
     }
 
     @PostMapping
