@@ -1,6 +1,8 @@
 package choiyh.musinsabackendassignment.service;
 
 import choiyh.musinsabackendassignment.dto.AddProductRequest;
+import choiyh.musinsabackendassignment.dto.ProductDto;
+import choiyh.musinsabackendassignment.dto.LowestPriceBrandByCategoryResponse;
 import choiyh.musinsabackendassignment.dto.UpdateProductRequest;
 import choiyh.musinsabackendassignment.entity.Brand;
 import choiyh.musinsabackendassignment.entity.Product;
@@ -22,13 +24,12 @@ public class ProductService {
 
     private final BrandRepository brandRepository;
 
-    // TODO: DTO 정의
     @Transactional
-    public Map<String, Object> getLowestPriceBrandByCategory() {
-        Map<String, Object> result = new HashMap<>();
+    public LowestPriceBrandByCategoryResponse getLowestPriceBrandByCategory() {
+        LowestPriceBrandByCategoryResponse result = new LowestPriceBrandByCategoryResponse();
         Integer total = 0;
 
-        List<Map<String, Object>> list = new ArrayList<>();
+        List<ProductDto> productsResponse = new ArrayList<>();
 
         // TODO: for loop 돌지 않고 빠르게 처리 할 방법 고민 (카테고리가 매우 많은 경우)
         for (Category category : Category.values()) {
@@ -37,18 +38,14 @@ public class ProductService {
                     .min(Comparator.comparing(Product::getPrice))
                     .orElseThrow(() -> new RuntimeException("해당 카테고리 상품이 없습니다.")); // TODO: exception handling.
 
-            Map<String, Object> data = new HashMap<>();
-            data.put("category", category.toString());
-            data.put("brand", lowestProduct.getBrand().getName());
-            data.put("price", PriceUtil.priceFormattingWithComma(lowestProduct.getPrice()));
-
-            list.add(data);
+            ProductDto data = ProductDto.of(lowestProduct);
+            productsResponse.add(data);
 
             total += lowestProduct.getPrice();
         }
 
-        result.put("products", list);
-        result.put("total", PriceUtil.priceFormattingWithComma(total));
+        result.setProducts(productsResponse);
+        result.setTotal(PriceUtil.priceFormattingWithComma(total));
 
         return result;
     }

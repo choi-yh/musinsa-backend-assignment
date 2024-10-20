@@ -1,6 +1,7 @@
 package choiyh.musinsabackendassignment.controller;
 
 import choiyh.musinsabackendassignment.dto.AddProductRequest;
+import choiyh.musinsabackendassignment.dto.LowestPriceBrandByCategoryResponse;
 import choiyh.musinsabackendassignment.dto.UpdateProductRequest;
 import choiyh.musinsabackendassignment.service.ProductService;
 import jdk.jfr.Description;
@@ -21,9 +22,8 @@ public class ProductController {
 
     @GetMapping("/categories/lowest-prices")
     @Description("1. 카테고리별 최저 가격 브랜드와 상품 가격, 총액을 조회합니다.")
-    public ResponseEntity<?> getLowestPriceBrandByCategory() {
-        Map<String, Object> result = productService.getLowestPriceBrandByCategory();
-        return ResponseEntity.ok(result);
+    public LowestPriceBrandByCategoryResponse getLowestPriceBrandByCategory() {
+        return productService.getLowestPriceBrandByCategory();
     }
 
     @GetMapping("/categories/{category}/lowest-highest")
