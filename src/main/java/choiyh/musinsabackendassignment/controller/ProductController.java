@@ -1,6 +1,7 @@
 package choiyh.musinsabackendassignment.controller;
 
-import choiyh.musinsabackendassignment.dto.ProductRequest;
+import choiyh.musinsabackendassignment.dto.AddProductRequest;
+import choiyh.musinsabackendassignment.dto.UpdateProductRequest;
 import choiyh.musinsabackendassignment.service.ProductService;
 import jdk.jfr.Description;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class ProductController {
 
     @PostMapping
     @Description("4. 상품을 추가합니다.")
-    public ResponseEntity<?> add(@RequestBody ProductRequest request) {
+    public ResponseEntity<?> add(@RequestBody AddProductRequest request) {
         Long id = productService.add(request);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -45,10 +46,11 @@ public class ProductController {
         return ResponseEntity.created(location).build();
     }
 
-    @PatchMapping
+    @PatchMapping("/{id}")
     @Description("4. 상품을 업데이트합니다.")
-    public ResponseEntity<?> update() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UpdateProductRequest request) {
+        productService.update(id, request);
+        return ResponseEntity.noContent().build(); // 결과를 알려줄 필요는 없다고 판단하여 204 처리
     }
 
     @DeleteMapping("/{id}")

@@ -42,4 +42,12 @@ public class Product {
         this.brand = brand;
     }
 
+    public void updateCategory(Category category) {
+        this.category = category;
+    }
+
+    public void updatePrice(Integer price) {
+        this.price = price;
+    }
+
 }

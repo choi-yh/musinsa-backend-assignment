@@ -10,6 +10,6 @@ import java.util.List;
 public class BrandRequest {
 
     private String name;
-    private List<ProductRequest> products;
+    private List<AddProductRequest> products;
 
 }

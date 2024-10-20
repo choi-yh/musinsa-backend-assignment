@@ -1,7 +1,7 @@
 package choiyh.musinsabackendassignment.service;
 
 import choiyh.musinsabackendassignment.dto.BrandRequest;
-import choiyh.musinsabackendassignment.dto.ProductRequest;
+import choiyh.musinsabackendassignment.dto.AddProductRequest;
 import choiyh.musinsabackendassignment.entity.Brand;
 import choiyh.musinsabackendassignment.entity.Product;
 import choiyh.musinsabackendassignment.enums.Category;
@@ -59,7 +59,7 @@ public class BrandService {
         List<Product> products = new ArrayList<>();
         if (request.getProducts() != null) {
             products = request.getProducts().stream()
-                    .map(ProductRequest::toEntity)
+                    .map(AddProductRequest::toEntity)
                     .toList();
         }
 

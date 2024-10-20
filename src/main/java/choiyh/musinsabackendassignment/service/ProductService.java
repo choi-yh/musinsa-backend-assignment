@@ -1,6 +1,7 @@
 package choiyh.musinsabackendassignment.service;
 
-import choiyh.musinsabackendassignment.dto.ProductRequest;
+import choiyh.musinsabackendassignment.dto.AddProductRequest;
+import choiyh.musinsabackendassignment.dto.UpdateProductRequest;
 import choiyh.musinsabackendassignment.entity.Brand;
 import choiyh.musinsabackendassignment.entity.Product;
 import choiyh.musinsabackendassignment.enums.Category;
@@ -90,7 +91,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Long add(ProductRequest request) {
+    public Long add(AddProductRequest request) {
         Brand brand = brandRepository.findById(request.getBrandId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 brand id 입니다.")); // TODO: error handling
 
@@ -106,6 +107,23 @@ public class ProductService {
         return product.getId();
     }
 
+    @Transactional
+    public void update(Long id, UpdateProductRequest request) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 brand id 입니다.")); // TODO: error handling
+
+        if (request.getCategory() != null) {
+            product.updateCategory(request.getCategory());
+        }
+
+        if (request.getPrice() != null) {
+            product.updatePrice(request.getPrice());
+        }
+    }
+
+    // TODO: 브랜드 업데이트시 bulk 로 업데이트하는 로직
+
+    @Transactional
     public void delete(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 brand id 입니다.")); // TODO: error handling
