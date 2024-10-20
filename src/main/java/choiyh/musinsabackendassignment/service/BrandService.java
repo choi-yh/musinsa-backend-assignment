@@ -72,4 +72,11 @@ public class BrandService {
         return brand.getId();
     }
 
+    @Transactional
+    public void delete(Long id) {
+        Brand brand = brandRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 brand id 입니다.")); // TODO: error handling
+        brandRepository.delete(brand);
+    }
+
 }

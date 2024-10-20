@@ -10,7 +10,7 @@ import lombok.Setter;
 public class AddProductRequest {
 
     private String category;
-    private Integer price; // 프론트에선 데이터 가공을 하지 않는다는 가정하에 "," 로 포맷팅된 가격 정보
+    private Integer price;
     private Long brandId;
 
     public static Product toEntity(AddProductRequest request) {

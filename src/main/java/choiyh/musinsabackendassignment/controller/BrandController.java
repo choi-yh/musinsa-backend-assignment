@@ -47,7 +47,8 @@ public class BrandController {
     @DeleteMapping("/{id}")
     @Description("4. 브랜드를 삭제합니다.")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        return ResponseEntity.ok().build();
+        brandService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
