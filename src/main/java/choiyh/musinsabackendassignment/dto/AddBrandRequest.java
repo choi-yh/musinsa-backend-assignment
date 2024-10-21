@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class BrandRequest {
+public class AddBrandRequest {
 
     private String name;
     private List<AddProductRequest> products;

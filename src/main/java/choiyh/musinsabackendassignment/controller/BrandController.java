@@ -1,7 +1,8 @@
 package choiyh.musinsabackendassignment.controller;
 
-import choiyh.musinsabackendassignment.dto.BrandRequest;
+import choiyh.musinsabackendassignment.dto.AddBrandRequest;
 import choiyh.musinsabackendassignment.dto.LowestPriceByBrandResponse;
+import choiyh.musinsabackendassignment.dto.UpdateBrandRequest;
 import choiyh.musinsabackendassignment.service.BrandService;
 import jdk.jfr.Description;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class BrandController {
 
     @PostMapping
     @Description("4. 브랜드를 추가합니다.")
-    public ResponseEntity<?> add(@RequestBody BrandRequest request) {
+    public ResponseEntity<?> add(@RequestBody AddBrandRequest request) {
         Long id = brandService.add(request);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -39,8 +40,9 @@ public class BrandController {
 
     @PatchMapping("/{id}")
     @Description("4. 브랜드를 업데이트합니다.")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody BrandRequest request) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UpdateBrandRequest request) {
+        brandService.update(id, request);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

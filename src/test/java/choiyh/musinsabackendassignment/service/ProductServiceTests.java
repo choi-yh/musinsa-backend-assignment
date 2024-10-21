@@ -29,7 +29,7 @@ public class ProductServiceTests {
     private ProductService productService;
 
     @Test
-    @DisplayName("제품 업데이트 테스트")
+    @DisplayName("4. 제품 업데이트 테스트 - 성공 케이스")
     @Description("정상적으로 업데이트 되는 케이스입니다.")
     public void update_product_success() {
         // given
@@ -56,7 +56,7 @@ public class ProductServiceTests {
     }
 
     @Test
-    @DisplayName("제품 업데이트 테스트")
+    @DisplayName("4. 제품 업데이트 테스트 - 실패 케이스")
     @Description("존재하지 않는 id 예외를 던지는 케이스입니다.")
     public void update_product_fail() {
         // given

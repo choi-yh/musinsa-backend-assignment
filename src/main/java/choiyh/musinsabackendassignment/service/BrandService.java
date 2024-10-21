@@ -19,7 +19,8 @@ public class BrandService {
 
     private final BrandRepository brandRepository;
 
-    // TODO: DTO 정의
+    private final ProductService productService;
+
     public LowestPriceByBrandResponse getLowestPriceByBrand() {
         LowestPriceByBrandResponse result = new LowestPriceByBrandResponse();
         LowestPriceByBrand data = new LowestPriceByBrand();
@@ -59,7 +60,7 @@ public class BrandService {
     }
 
     @Transactional
-    public Long add(BrandRequest request) {
+    public Long add(AddBrandRequest request) {
         // TODO: 중복된 브랜드명 처리는 고민해 볼 것
         List<Product> products = new ArrayList<>();
         if (request.getProducts() != null) {
@@ -75,6 +76,22 @@ public class BrandService {
         brandRepository.save(brand);
 
         return brand.getId();
+    }
+
+    @Transactional
+    public void update(Long id, UpdateBrandRequest request) {
+        Brand brand = brandRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 brand id 입니다.")); // TODO: error handling
+
+        // 브랜드 명 업데이트
+        if (request.getName() != null && !request.getName().isBlank()) {
+            brand.updateName(request.getName());
+        }
+
+        // 브랜드 상품 업데이트
+        if (request.getProducts() != null && !request.getProducts().isEmpty()) {
+            productService.updateBulk(brand, request.getProducts());
+        }
     }
 
     @Transactional

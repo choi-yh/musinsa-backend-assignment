@@ -112,7 +112,27 @@ public class ProductService {
         }
     }
 
-    // TODO: 브랜드 업데이트시 bulk 로 업데이트하는 로직
+    @Transactional
+    public void updateBulk(Brand brand, List<UpdateProductRequest> requests) {
+        // TODO: 최적화 방안 모색 - for loop 처리, request 들어온 값을 업데이트하는 방법
+        for (UpdateProductRequest request : requests) {
+            Optional<Product> existProduct = brand.getProducts().stream()
+                    .filter(p -> p.getId().equals(request.getId()))
+                    .findFirst();
+
+            // 존재하는 경우 값을 업데이트
+            if (existProduct.isPresent()) {
+                Product product = existProduct.get();
+                if (request.getCategory() != null) {
+                    product.updateCategory(request.getCategory());
+                }
+
+                if (request.getPrice() != null) {
+                    product.updatePrice(request.getPrice());
+                }
+            }
+        }
+    }
 
     @Transactional
     public void delete(Long id) {

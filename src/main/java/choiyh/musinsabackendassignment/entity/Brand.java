@@ -35,4 +35,8 @@ public class Brand {
         }
     }
 
+    public void updateName(String name) {
+        this.name = name;
+    }
+
 }
