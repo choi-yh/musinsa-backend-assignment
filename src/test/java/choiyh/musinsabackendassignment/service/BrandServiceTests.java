@@ -4,8 +4,9 @@ import choiyh.musinsabackendassignment.dto.UpdateBrandRequest;
 import choiyh.musinsabackendassignment.entity.Brand;
 import choiyh.musinsabackendassignment.entity.Product;
 import choiyh.musinsabackendassignment.enums.Category;
+import choiyh.musinsabackendassignment.exception.CustomException;
+import choiyh.musinsabackendassignment.exception.ErrorCode;
 import choiyh.musinsabackendassignment.repository.BrandRepository;
-import jdk.jfr.Description;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,8 +33,7 @@ public class BrandServiceTests {
     private BrandService brandService;
 
     @Test
-    @DisplayName("4. 브랜드 업데이트 비즈니스 로직 - 성공 케이스")
-    @Description("브랜드 이름을 업데이트합니다.")
+    @DisplayName("4. 브랜드 업데이트 비즈니스 로직 성공 케이스 - 브랜드 이름 업데이트")
     public void update_only_brandName() {
         // given
         Long brandId = 1L;
@@ -56,8 +56,7 @@ public class BrandServiceTests {
     }
 
     @Test
-    @DisplayName("4. 브랜드 업데이트 비즈니스 로직 - 실패 케이스")
-    @Description("브랜드 이름을 업데이트합니다.")
+    @DisplayName("4. 브랜드 업데이트 비즈니스 로직 실패 케이스 - 존재하지 않는 brand id. CustomException 발생")
     public void update_fail_by_invalid_brandId() {
         // given
         Long brandId = 1L;
@@ -66,18 +65,15 @@ public class BrandServiceTests {
         UpdateBrandRequest request = new UpdateBrandRequest();
         request.setName(updatedName);
 
-        // TODO: exception handling
-        doThrow(new IllegalArgumentException("존재하지 않는 brand id 입니다.")).when(brandRepository).findById(any(Long.class));
+        doThrow(new CustomException(ErrorCode.NOT_EXIST_BRAND)).when(brandRepository).findById(any(Long.class));
 
         // when & then
-        assertThrows(IllegalArgumentException.class, () -> {
-            brandService.update(brandId, request);
-        });
+        CustomException e = assertThrows(CustomException.class, () -> brandService.update(brandId, request));
+        assertEquals(ErrorCode.NOT_EXIST_BRAND, e.getErrorCode());
     }
 
     @Test
-    @DisplayName("4. 브랜드 삭제 비즈니스 로직 - 성공 케이스")
-    @Description("브랜드 및 제품을 정상적으로 삭제합니다.")
+    @DisplayName("4. 브랜드 삭제 비즈니스 로직 성공 케이스 - 브랜드 및 제품을 정상적으로 삭제")
     public void delete_success() {
         // given
         Product product1 = Product.builder()
@@ -106,23 +102,14 @@ public class BrandServiceTests {
     }
 
     @Test
-    @DisplayName("4. 브랜드 삭제 비즈니스 로직 - 실패 케이스")
-    @Description("존재하지 않는 브랜드 ID로 인해 예외를 던집니다.")
+    @DisplayName("4. 브랜드 삭제 비즈니스 로직 실패 케이스 - 존재하지 않는 brand id. CustomException 발생")
     public void delete_fail_with_invalid_brandId() {
         // given
-        Long brandId = 1L;
-        Brand brand = Brand.builder()
-                .name("brand name")
-                .products(new ArrayList<>())
-                .build();
+        doThrow(new CustomException(ErrorCode.NOT_EXIST_BRAND)).when(brandRepository).findById(any(Long.class));
 
-        doThrow(new IllegalArgumentException("존재하지 않는 brand id 입니다.")).when(brandRepository).delete(brand); // TODO: error handling
-
-        // when
-        brandService.delete(brandId);
-
-        // then
-        assertThrows(IllegalArgumentException.class, () -> brandService.delete(1L)); // TODO: error handling
+        // when & then
+        CustomException e = assertThrows(CustomException.class, () -> brandService.delete(1L));
+        assertEquals(ErrorCode.NOT_EXIST_BRAND, e.getErrorCode());
     }
 
 }

@@ -3,6 +3,8 @@ package choiyh.musinsabackendassignment.service;
 import choiyh.musinsabackendassignment.dto.*;
 import choiyh.musinsabackendassignment.entity.Brand;
 import choiyh.musinsabackendassignment.entity.Product;
+import choiyh.musinsabackendassignment.exception.CustomException;
+import choiyh.musinsabackendassignment.exception.ErrorCode;
 import choiyh.musinsabackendassignment.repository.BrandRepository;
 import choiyh.musinsabackendassignment.util.PriceUtil;
 import jakarta.transaction.Transactional;
@@ -81,7 +83,7 @@ public class BrandService {
     @Transactional
     public void update(Long id, UpdateBrandRequest request) {
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 brand id 입니다.")); // TODO: error handling
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_BRAND));
 
         // 브랜드 명 업데이트
         if (request.getName() != null && !request.getName().isBlank()) {
@@ -97,7 +99,7 @@ public class BrandService {
     @Transactional
     public void delete(Long id) {
         Brand brand = brandRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 brand id 입니다.")); // TODO: error handling
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_BRAND));
         brandRepository.delete(brand);
     }
 

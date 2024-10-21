@@ -2,9 +2,10 @@ package choiyh.musinsabackendassignment.controller;
 
 import choiyh.musinsabackendassignment.dto.AddProductRequest;
 import choiyh.musinsabackendassignment.dto.UpdateProductRequest;
+import choiyh.musinsabackendassignment.exception.CustomException;
+import choiyh.musinsabackendassignment.exception.ErrorCode;
 import choiyh.musinsabackendassignment.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.jfr.Description;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,8 +33,7 @@ class ProductControllerTests {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("4. 상품 추가 API 성공 케이스")
-    @Description("Location header 를 반환합니다.")
+    @DisplayName("4. 상품 추가 API 성공 케이스 - 201, Location header 응답")
     public void add_success() throws Exception {
         // given
         AddProductRequest request = new AddProductRequest();
@@ -59,8 +58,7 @@ class ProductControllerTests {
     }
 
     @Test
-    @DisplayName("4. 상품 추가 API 실패 케이스")
-    @Description("Invalid brand id 예외를 반환합니다.")
+    @DisplayName("4. 상품 추가 API 실패 케이스 - 존재하지 않는 브랜드 id. 400 NOT_EXIST_BRAND 응답")
     public void add_fail_with_invalid_brand_id() throws Exception {
         // given
         AddProductRequest request = new AddProductRequest();
@@ -68,8 +66,7 @@ class ProductControllerTests {
         request.setPrice(10000);
         request.setBrandId(100L);
 
-        // TODO: error handling
-        when(productService.add(any(AddProductRequest.class))).thenThrow(new IllegalArgumentException("존재하지 않는 brand id 입니다."));
+        when(productService.add(any(AddProductRequest.class))).thenThrow(new CustomException(ErrorCode.NOT_EXIST_BRAND));
 
         // when
         ResultActions response = mockMvc.perform(
@@ -79,43 +76,51 @@ class ProductControllerTests {
         );
 
         // then
-        // TODO: custom exception 정의 후 해당 값과 코드로 비교할 것.
-        response.andExpect(status().isInternalServerError());
+        response.andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("BRAND_001"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Not existing brand"));
     }
 
     @Test
-    @DisplayName("4. 단일 상품 업데이트 API 성공 케이스")
-    @Description("204 상태 코드를 응답합니다.")
+    @DisplayName("4. 단일 상품 업데이트 API 성공 케이스 - 204 응답")
     public void update_success() throws Exception {
         // given
         UpdateProductRequest request = new UpdateProductRequest();
-        doNothing().when(productService).update(1L, any(UpdateProductRequest.class));
+        doNothing().when(productService).update(any(Long.class), any(UpdateProductRequest.class));
 
         // when
-        ResultActions response = mockMvc.perform(patch("/api/v1/products/" + 1L));
+        ResultActions response = mockMvc.perform(
+                patch("/api/v1/products/" + 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
 
         // then
         response.andExpect(status().isNoContent());
     }
 
     @Test
-    @DisplayName("4. 단일 상품 업데이트 API 실패 케이스")
-    @Description("") // TODO: exception handling
+    @DisplayName("4. 단일 상품 업데이트 API 실패 케이스 - 존재하지 않는 상품 id. 400 NOT_EXIST_PRODUCT 응답")
     public void update_fail_with_invalid_product_id() throws Exception {
         // given
         UpdateProductRequest request = new UpdateProductRequest();
-        doThrow(new IllegalArgumentException("존재하지 않는 brand id 입니다.")).when(productService).update(1L, any(UpdateProductRequest.class));
+        doThrow(new CustomException(ErrorCode.NOT_EXIST_PRODUCT)).when(productService).update(any(Long.class), any(UpdateProductRequest.class));
 
         // when
-        ResultActions response = mockMvc.perform(patch("/api/v1/products/" + 1L));
+        ResultActions response = mockMvc.perform(
+                patch("/api/v1/products/" + 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
 
         // then
-        response.andExpect(result -> assertInstanceOf(IllegalArgumentException.class, result.getResolvedException())); // TODO: exception handling
+        response.andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("PRODUCT_001"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Not exist product"));
     }
 
     @Test
-    @DisplayName("4. 상품 삭제 API 성공 케이스")
-    @Description("204 상태 코드를 응답합니다.")
+    @DisplayName("4. 상품 삭제 API 성공 케이스 - 204 응답")
     public void delete_success() throws Exception {
         // given
         Long targetProductId = 1L;
@@ -129,18 +134,19 @@ class ProductControllerTests {
     }
 
     @Test
-    @DisplayName("4. 상품 삭제 API 실패 케이스")
-    @Description("") // TODO: exception handling
+    @DisplayName("4. 상품 삭제 API 실패 케이스 - 존재하지 않는 상품 id. 400 NOT_EXIST_PRODUCT 응답")
     public void delete_fail_with_invalid_product_id() throws Exception {
         // given
         Long targetProductId = 1L;
-        doThrow(new IllegalArgumentException("존재하지 않는 brand id 입니다.")).when(productService).delete(targetProductId);
+        doThrow(new CustomException(ErrorCode.NOT_EXIST_PRODUCT)).when(productService).delete(targetProductId);
 
         // when
         ResultActions response = mockMvc.perform(delete("/api/v1/products/" + targetProductId));
 
         // then
-        response.andExpect(result -> assertInstanceOf(IllegalArgumentException.class, result.getResolvedException())); // TODO: exception handling
+        response.andExpect(status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("PRODUCT_001"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Not exist product"));
     }
 
 }

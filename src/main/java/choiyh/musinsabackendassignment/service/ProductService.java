@@ -4,6 +4,8 @@ import choiyh.musinsabackendassignment.dto.*;
 import choiyh.musinsabackendassignment.entity.Brand;
 import choiyh.musinsabackendassignment.entity.Product;
 import choiyh.musinsabackendassignment.enums.Category;
+import choiyh.musinsabackendassignment.exception.CustomException;
+import choiyh.musinsabackendassignment.exception.ErrorCode;
 import choiyh.musinsabackendassignment.repository.BrandRepository;
 import choiyh.musinsabackendassignment.repository.ProductRepository;
 import choiyh.musinsabackendassignment.util.PriceUtil;
@@ -33,12 +35,14 @@ public class ProductService {
             List<Product> products = productRepository.findByCategory(category); // TODO: category 별 product 가 많아지는 경우 처리 방안 고민
             Product lowestProduct = products.stream()
                     .min(Comparator.comparing(Product::getPrice))
-                    .orElseThrow(() -> new RuntimeException("해당 카테고리 상품이 없습니다.")); // TODO: exception handling.
+                    .orElse(null); // 해당 카테고리에 데이터가 없는 경우 빈 데이터 리턴
 
-            ProductDto data = ProductDto.of(lowestProduct);
-            productsResponse.add(data);
+            if (lowestProduct != null) {
+                ProductDto data = ProductDto.of(lowestProduct);
+                productsResponse.add(data);
 
-            total += lowestProduct.getPrice();
+                total += lowestProduct.getPrice();
+            }
         }
 
         result.setProducts(productsResponse);
@@ -84,7 +88,7 @@ public class ProductService {
     @Transactional
     public Long add(AddProductRequest request) {
         Brand brand = brandRepository.findById(request.getBrandId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 brand id 입니다.")); // TODO: error handling
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_BRAND));
 
         Product product = Product.builder()
                 .category(request.getCategory())
@@ -101,7 +105,7 @@ public class ProductService {
     @Transactional
     public void update(Long id, UpdateProductRequest request) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 brand id 입니다.")); // TODO: error handling
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_PRODUCT));
 
         if (request.getCategory() != null) {
             product.updateCategory(request.getCategory());
@@ -137,7 +141,7 @@ public class ProductService {
     @Transactional
     public void delete(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 brand id 입니다.")); // TODO: error handling
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXIST_PRODUCT));
         productRepository.delete(product);
     }
 
