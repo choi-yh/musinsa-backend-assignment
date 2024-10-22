@@ -9,6 +9,8 @@ import choiyh.musinsabackendassignment.exception.ErrorCode;
 import choiyh.musinsabackendassignment.repository.BrandRepository;
 import choiyh.musinsabackendassignment.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,14 +34,8 @@ public class ProductService {
 
         List<ProductDto> productsResponse = new ArrayList<>();
 
-        // TODO: for loop 돌지 않고 빠르게 처리 할 방법 고민 (카테고리가 매우 많은 경우)
         for (Category category : Category.values()) {
-            // TODO: category 별 product 가 많아지는 경우(브랜드가 많아지는 경우) 처리 방안 고민
-            List<Product> products = productRepository.findByCategory(category);
-            Product lowestProduct = products.stream()
-                    .min(Comparator.comparing(Product::getPrice))
-                    .orElse(null); // 해당 카테고리에 데이터가 없는 경우 해당 카테고리 생략 (문제 조건에서 브랜드의 카테고리에는 1개의 상품 존재)
-
+            Product lowestProduct = getLowestPriceProductForCategory(category);
             if (lowestProduct != null) {
                 ProductDto data = ProductDto.of(lowestProduct);
                 productsResponse.add(data);
@@ -52,6 +48,37 @@ public class ProductService {
         result.setTotalPrice(totalPrice);
 
         return result;
+    }
+
+    public Product getLowestPriceProductForCategory(Category category) {
+        int page = 0;
+        int size = 1000;
+        Product lowestProduct = null;
+
+        while (true) {
+            Page<Product> pagedProducts = productRepository.findByCategory(category, PageRequest.of(page, size));
+
+            List<Product> products = pagedProducts.getContent();
+            if (products.isEmpty()) {
+                break;
+            }
+
+            Product lowestProductInPage = products.stream()
+                    .min(Comparator.comparing(Product::getPrice))
+                    .orElse(null);
+
+            if (lowestProduct == null || lowestProductInPage.getPrice() < lowestProduct.getPrice()) {
+                lowestProduct = lowestProductInPage;
+            }
+
+            if (pagedProducts.isLast()) {
+                break;
+            }
+
+            page++;
+        }
+
+        return lowestProduct;
     }
 
     @Transactional(readOnly = true)
