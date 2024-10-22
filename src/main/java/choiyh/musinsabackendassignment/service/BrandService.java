@@ -7,9 +7,11 @@ import choiyh.musinsabackendassignment.exception.CustomException;
 import choiyh.musinsabackendassignment.exception.ErrorCode;
 import choiyh.musinsabackendassignment.repository.BrandRepository;
 import choiyh.musinsabackendassignment.util.PriceUtil;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,34 +25,55 @@ public class BrandService {
 
     private final ProductService productService;
 
+    @Transactional(readOnly = true)
     public LowestPriceByBrandResponse getLowestPriceByBrand() {
+        int page = 0;
+        int size = 1000;
+        Brand lowestPriceBrand = null;
+
+        while (true) {
+            Page<Brand> pagedBrands = brandRepository.findAllWithProductsPaging(PageRequest.of(page, size));
+
+            List<Brand> brands = pagedBrands.getContent();
+            if (brands.isEmpty()) {
+                break;
+            }
+
+            lowestPriceBrand = findLowestPriceBrand(brands, lowestPriceBrand);
+
+            if (pagedBrands.isLast()) {
+                break;
+            }
+            page++;
+        }
+
+        return createResponse(lowestPriceBrand);
+    }
+
+    // 페이징으로 찾은 브랜드 중에서 총액이 최저인 브랜드를 찾고, 현재 최저 총액인 브랜드와 비교하여 리턴하는 메서드입니다.
+    private Brand findLowestPriceBrand(List<Brand> brands, Brand currentLowestBrand) {
+        return brands.stream()
+                .min(Comparator.comparing(this::calculateBrandTotalPrice))
+                .filter(pageLowest ->
+                        currentLowestBrand == null ||
+                                calculateBrandTotalPrice(pageLowest) < calculateBrandTotalPrice(currentLowestBrand))
+                .orElse(currentLowestBrand);
+    }
+
+    // 브랜드 상품의 카테고리별 상품 정보 데이터를 생성합니다.
+    private LowestPriceByBrandResponse createResponse(Brand lowestPriceBrand) {
         LowestPriceByBrandResponse result = new LowestPriceByBrandResponse();
-        LowestPriceByBrand data = new LowestPriceByBrand();
-
-        List<Brand> brands = brandRepository.findAll(); // TODO: 현재는 데이터가 적지만, 데이터가 많아지게 되는 경우 고려 할 것
-
-        // TODO: 데이터 핸들링 방식 가독성 좋게 리팩토링
-        // TODO: N+1 이슈 처리
-        Brand lowestPriceBrand = brands.stream()
-                .min(Comparator.comparing(b -> b.getProducts().stream().mapToInt(Product::getPrice).sum()))
-                .orElse(null);
-        if (lowestPriceBrand == null) { // 상품이 없거나 가격 정보가 케이스이므로 return 합니다.
+        if (lowestPriceBrand == null) {
             return result;
         }
 
-        Integer totalPrice = lowestPriceBrand.getProducts().stream()
-                .mapToInt(Product::getPrice)
-                .sum();
-
         List<ProductDto> categoryValues = lowestPriceBrand.getProducts().stream()
-                .map(
-                        p -> ProductDto.builder()
-                                .category(p.getCategory().toString())
-                                .price(PriceUtil.priceFormattingWithComma(p.getPrice()))
-                                .build()
-                )
+                .map(ProductDto::ofWithoutBrand)
                 .toList();
 
+        Integer totalPrice = calculateBrandTotalPrice(lowestPriceBrand);
+
+        LowestPriceByBrand data = new LowestPriceByBrand();
         data.setBrand(lowestPriceBrand.getName());
         data.setTotalPrice(PriceUtil.priceFormattingWithComma(totalPrice));
         data.setProducts(categoryValues);
@@ -58,6 +81,12 @@ public class BrandService {
         result.setLowestPrice(data);
 
         return result;
+    }
+
+    private Integer calculateBrandTotalPrice(Brand brand) {
+        return brand.getProducts().stream()
+                .mapToInt(Product::getPrice)
+                .sum();
     }
 
     @Transactional
