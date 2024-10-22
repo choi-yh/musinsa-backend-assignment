@@ -1,6 +1,11 @@
 package choiyh.musinsabackendassignment.service;
 
-import choiyh.musinsabackendassignment.dto.*;
+import choiyh.musinsabackendassignment.dto.brand.AddBrandRequest;
+import choiyh.musinsabackendassignment.dto.brand.LowestPriceByBrand;
+import choiyh.musinsabackendassignment.dto.brand.LowestPriceByBrandResponse;
+import choiyh.musinsabackendassignment.dto.brand.UpdateBrandRequest;
+import choiyh.musinsabackendassignment.dto.product.AddProductRequest;
+import choiyh.musinsabackendassignment.dto.product.ProductDto;
 import choiyh.musinsabackendassignment.entity.Brand;
 import choiyh.musinsabackendassignment.entity.Product;
 import choiyh.musinsabackendassignment.exception.CustomException;

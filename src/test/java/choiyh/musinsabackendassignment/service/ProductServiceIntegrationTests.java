@@ -1,8 +1,8 @@
 package choiyh.musinsabackendassignment.service;
 
-import choiyh.musinsabackendassignment.dto.LowestHighestPriceBrandByCategoryResponse;
-import choiyh.musinsabackendassignment.dto.LowestPriceBrandByCategoryResponse;
-import choiyh.musinsabackendassignment.dto.ProductDto;
+import choiyh.musinsabackendassignment.dto.product.LowestHighestPriceBrandByCategoryResponse;
+import choiyh.musinsabackendassignment.dto.product.LowestPriceBrandByCategoryResponse;
+import choiyh.musinsabackendassignment.dto.product.ProductDto;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

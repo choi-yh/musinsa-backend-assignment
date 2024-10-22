@@ -1,5 +1,6 @@
-package choiyh.musinsabackendassignment.dto;
+package choiyh.musinsabackendassignment.dto.brand;
 
+import choiyh.musinsabackendassignment.dto.product.ProductDto;
 import lombok.Getter;
 import lombok.Setter;
 

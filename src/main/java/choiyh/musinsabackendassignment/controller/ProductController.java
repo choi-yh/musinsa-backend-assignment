@@ -1,17 +1,14 @@
 package choiyh.musinsabackendassignment.controller;
 
-import choiyh.musinsabackendassignment.dto.AddProductRequest;
-import choiyh.musinsabackendassignment.dto.LowestHighestPriceBrandByCategoryResponse;
-import choiyh.musinsabackendassignment.dto.LowestPriceBrandByCategoryResponse;
-import choiyh.musinsabackendassignment.dto.UpdateProductRequest;
+import choiyh.musinsabackendassignment.dto.product.LowestHighestPriceBrandByCategoryResponse;
+import choiyh.musinsabackendassignment.dto.product.LowestPriceBrandByCategoryResponse;
 import choiyh.musinsabackendassignment.service.ProductService;
 import jdk.jfr.Description;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,33 +27,6 @@ public class ProductController {
     @Description("3. 카테고리명으로 최저, 최고 가격 브랜드와 상품 가격을 조회합니다.")
     public LowestHighestPriceBrandByCategoryResponse getLowestHighestBrandByCategory(@PathVariable String category) {
         return productService.getLowestHighestPriceBrandByCategory(category);
-    }
-
-    @PostMapping
-    @Description("4. 상품을 추가합니다.")
-    public ResponseEntity<?> add(@RequestBody AddProductRequest request) {
-        Long id = productService.add(request);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(id)
-                .toUri();
-
-        return ResponseEntity.created(location).build();
-    }
-
-    @PatchMapping("/{id}")
-    @Description("4. 상품을 업데이트합니다.")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UpdateProductRequest request) {
-        productService.update(id, request);
-        return ResponseEntity.noContent().build(); // 결과를 알려줄 필요는 없다고 판단하여 204 처리
-    }
-
-    @DeleteMapping("/{id}")
-    @Description("4. 상품을 삭제합니다.")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        productService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 
 }

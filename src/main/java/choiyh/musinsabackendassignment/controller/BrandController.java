@@ -1,16 +1,12 @@
 package choiyh.musinsabackendassignment.controller;
 
-import choiyh.musinsabackendassignment.dto.AddBrandRequest;
-import choiyh.musinsabackendassignment.dto.LowestPriceByBrandResponse;
-import choiyh.musinsabackendassignment.dto.UpdateBrandRequest;
+import choiyh.musinsabackendassignment.dto.brand.LowestPriceByBrandResponse;
 import choiyh.musinsabackendassignment.service.BrandService;
 import jdk.jfr.Description;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,33 +19,6 @@ public class BrandController {
     @Description("2. 단일 브랜드 구매시 최저가인 브랜드 정보를 조회합니다.")
     public LowestPriceByBrandResponse getLowestPriceByBrand() {
         return brandService.getLowestPriceByBrand();
-    }
-
-    @PostMapping
-    @Description("4. 브랜드를 추가합니다.")
-    public ResponseEntity<?> add(@RequestBody AddBrandRequest request) {
-        Long id = brandService.add(request);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(id)
-                .toUri();
-
-        return ResponseEntity.created(location).build();
-    }
-
-    @PatchMapping("/{id}")
-    @Description("4. 브랜드를 업데이트합니다.")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UpdateBrandRequest request) {
-        brandService.update(id, request);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/{id}")
-    @Description("4. 브랜드를 삭제합니다.")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        brandService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 
 }

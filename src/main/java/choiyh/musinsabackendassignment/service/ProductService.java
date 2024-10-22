@@ -1,6 +1,6 @@
 package choiyh.musinsabackendassignment.service;
 
-import choiyh.musinsabackendassignment.dto.*;
+import choiyh.musinsabackendassignment.dto.product.*;
 import choiyh.musinsabackendassignment.entity.Brand;
 import choiyh.musinsabackendassignment.entity.Product;
 import choiyh.musinsabackendassignment.enums.Category;

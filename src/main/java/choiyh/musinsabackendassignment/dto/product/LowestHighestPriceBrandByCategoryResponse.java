@@ -1,4 +1,4 @@
-package choiyh.musinsabackendassignment.dto;
+package choiyh.musinsabackendassignment.dto.product;
 
 import lombok.Getter;
 import lombok.Setter;

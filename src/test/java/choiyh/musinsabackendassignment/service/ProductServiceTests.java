@@ -1,6 +1,6 @@
 package choiyh.musinsabackendassignment.service;
 
-import choiyh.musinsabackendassignment.dto.UpdateProductRequest;
+import choiyh.musinsabackendassignment.dto.product.UpdateProductRequest;
 import choiyh.musinsabackendassignment.entity.Product;
 import choiyh.musinsabackendassignment.enums.Category;
 import choiyh.musinsabackendassignment.exception.CustomException;

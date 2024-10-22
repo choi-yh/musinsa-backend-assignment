@@ -1,4 +1,4 @@
-package choiyh.musinsabackendassignment.dto;
+package choiyh.musinsabackendassignment.dto.product;
 
 import choiyh.musinsabackendassignment.entity.Product;
 import choiyh.musinsabackendassignment.util.PriceUtil;
