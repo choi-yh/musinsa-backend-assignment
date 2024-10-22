@@ -146,7 +146,6 @@ public class ProductService {
 
     @Transactional
     public void updateBulk(Brand brand, List<UpdateProductRequest> requests) {
-        // TODO: 최적화 방안 모색 - for loop 처리, request 들어온 값을 업데이트하는 방법
         for (UpdateProductRequest request : requests) {
             Optional<Product> existProduct = brand.getProducts().stream()
                     .filter(p -> p.getId().equals(request.getId()))

@@ -29,7 +29,6 @@ public class Brand {
         this.name = name;
         this.products = products;
 
-        // TODO: 최적화 필요 - insert 쿼리 N번 발생
         for (Product product : products) {
             product.mappingBrand(this);
         }

@@ -98,7 +98,6 @@ public class BrandServiceTests {
 
         // then
         Mockito.verify(brandRepository, times(1)).delete(brand);
-        // TODO: 제품 삭제 로직 검증?
     }
 
     @Test

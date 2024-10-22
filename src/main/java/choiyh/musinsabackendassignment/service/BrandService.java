@@ -91,7 +91,6 @@ public class BrandService {
 
     @Transactional
     public Long add(AddBrandRequest request) {
-        // TODO: 중복된 브랜드명 처리는 고민해 볼 것
         List<Product> products = new ArrayList<>();
         if (request.getProducts() != null) {
             products = request.getProducts().stream()
