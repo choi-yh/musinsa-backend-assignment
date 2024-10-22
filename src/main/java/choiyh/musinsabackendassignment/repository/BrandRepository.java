@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BrandRepository extends JpaRepository<Brand, Long> {
     @Query("SELECT b FROM Brand b JOIN FETCH b.products")
-    Page<Brand> findAllWithProductsPaging(Pageable pageable);
+    Page<Brand> findAllWithProducts(Pageable pageable);
 }

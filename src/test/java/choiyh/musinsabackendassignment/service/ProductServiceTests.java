@@ -38,11 +38,11 @@ public class ProductServiceTests {
                 .price(10000)
                 .build();
 
-        String expectedCategory = Category.BAG.getKorean();
+        String expectedCategory = Category.BAG.toString();
         Integer expectedPrice = 12000;
 
         UpdateProductRequest updateProductRequest = new UpdateProductRequest();
-        updateProductRequest.setCategory(Category.BAG.getKorean());
+        updateProductRequest.setCategory(Category.BAG.toString());
         updateProductRequest.setPrice(12000);
 
         when(productRepository.findById(any())).thenReturn(Optional.of(product));
@@ -51,7 +51,7 @@ public class ProductServiceTests {
         productService.update(1L, updateProductRequest);
 
         // then
-        assertEquals(expectedCategory, product.getCategory().getKorean());
+        assertEquals(expectedCategory, product.getCategory().toString());
         assertEquals(expectedPrice, product.getPrice());
     }
 
@@ -60,7 +60,7 @@ public class ProductServiceTests {
     public void update_product_fail() {
         // given
         UpdateProductRequest updateProductRequest = new UpdateProductRequest();
-        updateProductRequest.setCategory(Category.BAG.getKorean());
+        updateProductRequest.setCategory(Category.BAG.toString());
         updateProductRequest.setPrice(12000);
 
         when(productRepository.findById(any())).thenThrow(new CustomException(ErrorCode.NOT_EXIST_BRAND));

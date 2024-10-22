@@ -12,7 +12,7 @@ public class CategoryConverter implements AttributeConverter<Category, String> {
         if (category == null) {
             return null;
         }
-        return category.getKorean();
+        return category.toString();
     }
 
     @Override

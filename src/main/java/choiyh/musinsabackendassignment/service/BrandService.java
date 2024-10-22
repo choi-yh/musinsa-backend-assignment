@@ -32,7 +32,7 @@ public class BrandService {
         Brand lowestPriceBrand = null;
 
         while (true) {
-            Page<Brand> pagedBrands = brandRepository.findAllWithProductsPaging(PageRequest.of(page, size));
+            Page<Brand> pagedBrands = brandRepository.findAllWithProducts(PageRequest.of(page, size));
 
             List<Brand> brands = pagedBrands.getContent();
             if (brands.isEmpty()) {

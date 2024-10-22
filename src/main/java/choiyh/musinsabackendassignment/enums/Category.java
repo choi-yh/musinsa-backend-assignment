@@ -31,7 +31,7 @@ public enum Category {
 
     public static Category getCategoryFromKorean(String korean) {
         return Arrays.stream(Category.values())
-                .filter(category -> category.getKorean().equals(korean))
+                .filter(category -> category.toString().equals(korean))
                 .findFirst()
                 .orElseThrow(() -> new CustomException(ErrorCode.UNKNOWN_CATEGORY, korean));
     }

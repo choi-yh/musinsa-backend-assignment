@@ -66,10 +66,10 @@ public class ProductServiceIntegrationTests {
         // then
         assertEquals(category, result.getCategory());
 
-        assertEquals("C", result.getLowestPrice().getBrand());
+        assertEquals("C", result.getLowestPrice().getBrandName());
         assertEquals("10,000", result.getLowestPrice().getPrice());
 
-        assertEquals("I", result.getHighestPrice().getBrand());
+        assertEquals("I", result.getHighestPrice().getBrandName());
         assertEquals("11,400", result.getHighestPrice().getPrice());
 
     }

@@ -16,20 +16,20 @@ import java.util.Objects;
 public class ProductDto {
 
     private String category;
-    private String brand;
+    private String brandName;
     private String price;
 
     public static ProductDto of(Product product) {
         return ProductDto.builder()
                 .category(product.getCategory().toString())
-                .brand(product.getBrand().getName())
+                .brandName(product.getBrand().getName())
                 .price(PriceUtil.priceFormattingWithComma(product.getPrice()))
                 .build();
     }
 
     public static ProductDto ofWithoutCategory(Product product) {
         return ProductDto.builder()
-                .brand(product.getBrand().getName())
+                .brandName(product.getBrand().getName())
                 .price(PriceUtil.priceFormattingWithComma(product.getPrice()))
                 .build();
     }
@@ -47,13 +47,13 @@ public class ProductDto {
         if (o == null || getClass() != o.getClass()) return false;
         ProductDto that = (ProductDto) o;
         return Objects.equals(category, that.category) &&
-                Objects.equals(brand, that.brand) &&
+                Objects.equals(brandName, that.brandName) &&
                 Objects.equals(price, that.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(category, brand, price);
+        return Objects.hash(category, brandName, price);
     }
 
 }
