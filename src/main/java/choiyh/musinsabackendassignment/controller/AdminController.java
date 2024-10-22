@@ -24,7 +24,7 @@ public class AdminController {
 
     @PostMapping("/brands")
     @Description("4. 브랜드를 추가합니다.")
-    public ResponseEntity<?> addBrands(@RequestBody AddBrandRequest request) {
+    public ResponseEntity<?> addBrand(@RequestBody AddBrandRequest request) {
         Long id = brandService.add(request);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
