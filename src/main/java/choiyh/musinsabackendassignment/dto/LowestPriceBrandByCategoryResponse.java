@@ -1,5 +1,6 @@
 package choiyh.musinsabackendassignment.dto;
 
+import choiyh.musinsabackendassignment.util.PriceUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,5 +13,9 @@ public class LowestPriceBrandByCategoryResponse {
 
     private String totalPrice;
     List<ProductDto> products = new ArrayList<>();
+
+    public void setTotalPrice(Integer totalPrice) {
+        this.totalPrice = PriceUtil.priceFormattingWithComma(totalPrice);
+    }
 
 }

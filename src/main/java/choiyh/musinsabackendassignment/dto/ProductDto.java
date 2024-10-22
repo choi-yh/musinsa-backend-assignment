@@ -27,6 +27,13 @@ public class ProductDto {
                 .build();
     }
 
+    public static ProductDto ofWithoutCategory(Product product) {
+        return ProductDto.builder()
+                .brand(product.getBrand().getName())
+                .price(PriceUtil.priceFormattingWithComma(product.getPrice()))
+                .build();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

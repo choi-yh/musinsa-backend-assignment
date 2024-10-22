@@ -8,12 +8,14 @@ import choiyh.musinsabackendassignment.exception.CustomException;
 import choiyh.musinsabackendassignment.exception.ErrorCode;
 import choiyh.musinsabackendassignment.repository.BrandRepository;
 import choiyh.musinsabackendassignment.repository.ProductRepository;
-import choiyh.musinsabackendassignment.util.PriceUtil;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,66 +25,65 @@ public class ProductService {
 
     private final BrandRepository brandRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public LowestPriceBrandByCategoryResponse getLowestPriceBrandByCategory() {
         LowestPriceBrandByCategoryResponse result = new LowestPriceBrandByCategoryResponse();
-        Integer total = 0;
+        Integer totalPrice = 0;
 
         List<ProductDto> productsResponse = new ArrayList<>();
 
         // TODO: for loop 돌지 않고 빠르게 처리 할 방법 고민 (카테고리가 매우 많은 경우)
         for (Category category : Category.values()) {
-            List<Product> products = productRepository.findByCategory(category); // TODO: category 별 product 가 많아지는 경우 처리 방안 고민
+            // TODO: category 별 product 가 많아지는 경우(브랜드가 많아지는 경우) 처리 방안 고민
+            List<Product> products = productRepository.findByCategory(category);
             Product lowestProduct = products.stream()
                     .min(Comparator.comparing(Product::getPrice))
-                    .orElse(null); // 해당 카테고리에 데이터가 없는 경우 빈 데이터 리턴
+                    .orElse(null); // 해당 카테고리에 데이터가 없는 경우 해당 카테고리 생략 (문제 조건에서 브랜드의 카테고리에는 1개의 상품 존재)
 
             if (lowestProduct != null) {
                 ProductDto data = ProductDto.of(lowestProduct);
                 productsResponse.add(data);
 
-                total += lowestProduct.getPrice();
+                totalPrice += lowestProduct.getPrice();
             }
         }
 
         result.setProducts(productsResponse);
-        result.setTotalPrice(PriceUtil.priceFormattingWithComma(total));
+        result.setTotalPrice(totalPrice);
 
         return result;
     }
 
-    @Transactional
-    public LowestHighestPriceBrandByCategoryResponse getLowestHighestPriceBrandByCategory(String category) {
+    @Transactional(readOnly = true)
+    public LowestHighestPriceBrandByCategoryResponse getLowestHighestPriceBrandByCategory(String category) throws CustomException {
         LowestHighestPriceBrandByCategoryResponse result = new LowestHighestPriceBrandByCategoryResponse();
 
-        List<Product> products = productRepository.findByCategory(Category.getCategoryFromKorean(category));
-        if (products.isEmpty()) {
-            // TODO: 주어진 카테고리가 아닌 경우에 대한 처리 필요. (예외 발생)
-            return result;
-        }
+        List<Product> products = productRepository.findByCategory(Category.getCategoryFromKorean(category)); // 잘못된 값인 경우 exception 발생
 
-        // TODO: 가독성 좋게 리팩토링
-        Product lowestProduct = products.stream()
-                .min(Comparator.comparing(Product::getPrice))
-                .get();
+        ProductDto lowestData = filterLowestPriceProduct(products);
+        ProductDto highestData = filterHighestPriceProduct(products);
 
-        ProductDto lowestData = new ProductDto();
-        lowestData.setBrand(lowestProduct.getBrand().getName());
-        lowestData.setPrice(PriceUtil.priceFormattingWithComma(lowestProduct.getPrice()));
-
-        Product highestProduct = products.stream()
-                .max(Comparator.comparing(Product::getPrice))
-                .get(); // TODO: check
-
-        ProductDto highestData = new ProductDto();
-        highestData.setBrand(highestProduct.getBrand().getName());
-        highestData.setPrice(PriceUtil.priceFormattingWithComma(highestProduct.getPrice()));
-
-        result.setLowestPrice(lowestData);
         result.setCategory(category);
+        result.setLowestPrice(lowestData);
         result.setHighestPrice(highestData);
 
         return result;
+    }
+
+    private ProductDto filterLowestPriceProduct(List<Product> products) {
+        Product lowestProduct = products.stream()
+                .min(Comparator.comparing(Product::getPrice))
+                .get(); // 문제 조건에서 브랜드의 카테고리에는 1개의 상품이 존재한다고 하여 null check 생략
+
+        return ProductDto.ofWithoutCategory(lowestProduct);
+    }
+
+    private ProductDto filterHighestPriceProduct(List<Product> products) {
+        Product highestProduct = products.stream()
+                .max(Comparator.comparing(Product::getPrice))
+                .get(); // 문제 조건에서 브랜드의 카테고리에는 1개의 상품이 존재한다고 하여 null check 생략
+
+        return ProductDto.ofWithoutCategory(highestProduct);
     }
 
     @Transactional
