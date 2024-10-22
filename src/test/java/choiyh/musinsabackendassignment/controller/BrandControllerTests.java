@@ -16,8 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BrandController.class)
@@ -31,6 +30,19 @@ public class BrandControllerTests {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Test
+    @DisplayName("2. 단일 브랜드로 모든 카테고리 상품 구매 시 최저가 브랜드와 카테고리별 상품 가격, 총액을 조회하는 API 테스트")
+    public void getLowestPriceByBrand() throws Exception {
+        // when
+        ResultActions response = mockMvc.perform(
+                get("/api/v1/brands/lowest-price")
+        );
+
+        // then
+        response.andExpect(status().isOk());
+        verify(brandService, times(1)).getLowestPriceByBrand();
+    }
 
     @Test
     @DisplayName("4. 브랜드 수정 API 성공 케이스 - 204 응답")
@@ -102,5 +114,4 @@ public class BrandControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("BRAND_001"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Not existing brand"));
     }
-
 }

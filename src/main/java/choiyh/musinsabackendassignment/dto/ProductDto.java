@@ -5,6 +5,8 @@ import choiyh.musinsabackendassignment.util.PriceUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
+import java.util.Objects;
+
 @Builder
 @Getter
 @Setter
@@ -24,4 +26,20 @@ public class ProductDto {
                 .price(PriceUtil.priceFormattingWithComma(product.getPrice()))
                 .build();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductDto that = (ProductDto) o;
+        return Objects.equals(category, that.category) &&
+                Objects.equals(brand, that.brand) &&
+                Objects.equals(price, that.price);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(category, brand, price);
+    }
+
 }

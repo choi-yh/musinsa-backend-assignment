@@ -46,7 +46,7 @@ public class ProductService {
         }
 
         result.setProducts(productsResponse);
-        result.setTotal(PriceUtil.priceFormattingWithComma(total));
+        result.setTotalPrice(PriceUtil.priceFormattingWithComma(total));
 
         return result;
     }

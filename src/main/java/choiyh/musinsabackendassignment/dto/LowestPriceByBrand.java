@@ -9,7 +9,7 @@ import java.util.List;
 @Setter
 public class LowestPriceByBrand {
 
-    private String total;
+    private String totalPrice;
     private String brand;
     private List<ProductDto> products;
 

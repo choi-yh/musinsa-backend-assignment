@@ -33,6 +33,35 @@ class ProductControllerTests {
     private ObjectMapper objectMapper;
 
     @Test
+    @DisplayName("1. 카테고리 별 최저가격 브랜드와 상품 가격, 총액을 조회하는 API 테스트")
+    public void getLowestPriceBrandByCategory() throws Exception {
+        // when
+        ResultActions response = mockMvc.perform(
+                get("/api/v1/products/categories/lowest-prices")
+        );
+
+        // then
+        response.andExpect(status().isOk());
+        verify(productService, times(1)).getLowestPriceBrandByCategory();
+    }
+
+    @Test
+    @DisplayName("3. 카테고리 이름으로 최저, 최고 가격 브랜드와 상품 가격을 조회하는 API 테스트")
+    public void getLowestHighestBrandByCategory() throws Exception {
+        // given
+        String category = "상의";
+
+        // when
+        ResultActions response = mockMvc.perform(
+                get(String.format("/api/v1/products/categories/%s/lowest-highest", category))
+        );
+
+        // then
+        response.andExpect(status().isOk());
+        verify(productService, times(1)).getLowestHighestPriceBrandByCategory(category);
+    }
+
+    @Test
     @DisplayName("4. 상품 추가 API 성공 케이스 - 201, Location header 응답")
     public void add_success() throws Exception {
         // given

@@ -33,9 +33,8 @@ public class BrandService {
         // TODO: N+1 이슈 처리
         Brand lowestPriceBrand = brands.stream()
                 .min(Comparator.comparing(b -> b.getProducts().stream().mapToInt(Product::getPrice).sum()))
-                .orElse(null); // TODO: null 처리
-
-        if (lowestPriceBrand == null) {
+                .orElse(null);
+        if (lowestPriceBrand == null) { // 상품이 없거나 가격 정보가 케이스이므로 return 합니다.
             return result;
         }
 
@@ -53,7 +52,7 @@ public class BrandService {
                 .toList();
 
         data.setBrand(lowestPriceBrand.getName());
-        data.setTotal(PriceUtil.priceFormattingWithComma(totalPrice));
+        data.setTotalPrice(PriceUtil.priceFormattingWithComma(totalPrice));
         data.setProducts(categoryValues);
 
         result.setLowestPrice(data);

@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class LowestPriceBrandByCategoryResponse {
 
-    private String total;
+    private String totalPrice;
     List<ProductDto> products = new ArrayList<>();
 
 }
