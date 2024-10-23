@@ -1,3 +1,70 @@
+async function fetchProducts() {
+    try {
+        const response = await fetch('/api/v1/admin/products');
+        const data = await response.json();
+        renderProductTable(data);
+    } catch (error) {
+        document.getElementById('product-list').textContent = 'Error: ' + error.message;
+    }
+}
+
+function renderProductTable(data) {
+    // HTML 테이블 요소 생성
+    const table = document.createElement('table');
+    table.setAttribute('border', '1'); // 테이블 테두리 설정
+    table.style.borderCollapse = 'collapse';
+    table.style.marginTop = '10px';
+
+    // 카테고리 목록을 추출
+    const categories = [...new Set(data.map(product => product.category))];
+    // 브랜드 목록을 추출
+    const brands = [...new Set(data.map(product => product.brand_name))];
+
+    // 테이블 헤더 생성
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    headerRow.appendChild(document.createElement('th')); // 왼쪽 상단 빈 셀 추가
+
+    // 카테고리 헤더 추가
+    categories.forEach(category => {
+        const th = document.createElement('th');
+        th.innerText = category;
+        th.style.border = '1px solid black';
+        th.style.padding = '8px';
+        headerRow.appendChild(th);
+    });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // 브랜드별로 가격을 추가한 행 생성
+    brands.forEach(brand => {
+        const row = document.createElement('tr');
+        const brandCell = document.createElement('td');
+        brandCell.innerText = brand; // 브랜드명 추가
+        brandCell.style.border = '1px solid black';
+        brandCell.style.padding = '8px';
+        row.appendChild(brandCell);
+
+        // 각 카테고리별 가격 추가
+        categories.forEach(category => {
+            // 해당 브랜드와 카테고리의 가격 찾기
+            const product = data.find(p => p.brand_name === brand && p.category === category);
+            const priceCell = document.createElement('td');
+            priceCell.innerText = product ? product.price : '-'; // 가격 또는 'N/A' 추가
+            priceCell.style.border = '1px solid black';
+            priceCell.style.padding = '8px';
+            row.appendChild(priceCell);
+        });
+        table.appendChild(row);
+    });
+
+    // 기존 테이블을 제거하고 새 테이블을 문서에 추가
+    const productListDiv = document.getElementById('product-list');
+    productListDiv.innerHTML = '';  // 기존 내용을 지우고
+    productListDiv.appendChild(table);
+}
+
 // 구현 1
 async function fetchLowestPriceBrandByCategory() {
     try {

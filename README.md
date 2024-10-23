@@ -26,9 +26,8 @@
 * `PATCH /api/v1/admin/products/{id}`
 * `DELETE /api/v1/admin/products/{id}`
 
-
-* 각 API 들은 성공과 실패 상황에 대한 응답 코드와 데이터 (메시지)를 내려줍니다.
-* 각 _AdminControllerTests_, _AdminServiceTests_ 클래스에 _BrandService_, _ProductService_ mocking 을 통해 테스트를 구현했습니다.
+각 API 들은 성공과 실패 상황에 대한 응답 코드와 데이터 (메시지)를 내려줍니다.  
+각 _AdminControllerTests_, _AdminServiceTests_ 클래스에 _BrandService_, _ProductService_ mocking 을 통해 테스트를 구현했습니다.
 
 ## 코드 빌드, 테스트, 실행
 
@@ -63,9 +62,17 @@ open localhost:8080 # 프론트엔드 페이지
 ### Test
 
 ```
+# unit tests
 ./gradlew clean test 
 open build/reports/tests/test/index.html # 테스트 결과 확인
 ```
+
+* 각 API 에 대한 테스트는 [Musinsa-backend-assignment.postman_collection.json](Musinsa-backend-assignment.postman_collection.json) 파일을 Postman 에서 Import 하거나
+[Swagger](#swagger) 에서 테스트 하실 수 있습니다.  
+* 제안드리고 싶은 테스트 방식은 Postman 을 Import 한 뒤, 서버 실행 후 순차적으로 Postman 으로 테스트하는 방법입니다.   
+각 API 별 결과를 `localhost:8080` 페이지에서 새로고침하여 확인하실 수 있습니다.   
+Postman 디렉토리 루트의 _View complete documentation_ 에 각 테스트에 대한 설명을 추가해놓았습니다.
+
 
 ### ERD
 

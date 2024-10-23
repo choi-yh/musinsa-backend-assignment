@@ -1,0 +1,329 @@
+{
+	"info": {
+		"_postman_id": "8e124da6-bd8a-45a4-ada3-485ffe310d8a",
+		"name": "[최영효] Musinsa-backend-assignment",
+		"description": "구현 1, 2, 3 에 대한 테스트는 _coordination/_ 디렉토리, 구현 4번에 대한 테스트는 _admin/_ 하위에 있습니다.\n\n- 서버 실행 후 localhost:8080 으로 프론트엔드 페이지 접근하여 1 \\~ 3번 결과 확인과 4번 테스트 후의 결과값 확인도 가능합니다.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15919737"
+	},
+	"item": [
+		{
+			"name": "coordination",
+			"item": [
+				{
+					"name": "1. 카테고리별 최저 브랜드, 가격",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/v1/products/categories/lowest-prices",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"categories",
+								"lowest-prices"
+							]
+						},
+						"description": "주어진 결과값을 200 OK 코드와 반환합니다."
+					},
+					"response": []
+				},
+				{
+					"name": "2. 단일 브랜드 최저 브랜드 조회",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/v1/brands/lowest-price",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"brands",
+								"lowest-price"
+							]
+						},
+						"description": "주어진 결과값을 200 OK 코드와 반환합니다."
+					},
+					"response": []
+				},
+				{
+					"name": "3. 카테고리명으로 최저, 최고 가격 브랜드 조회",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/v1/products/categories/상의/lowest-highest",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"categories",
+								"상의",
+								"lowest-highest"
+							]
+						},
+						"description": "주어진 결과값을 200 OK 코드와 반환합니다."
+					},
+					"response": []
+				},
+				{
+					"name": "3. 카테고리명으로 최저, 최고 가격 브랜드 조회 - 잘못된 카테고리 입력",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/v1/products/categories/향수/lowest-highest",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"categories",
+								"향수",
+								"lowest-highest"
+							]
+						},
+						"description": "400 Bad Request 와 에러 메시지를 반환합니다."
+					},
+					"response": []
+				}
+			],
+			"description": "코디 완성 서비스 문제인 1,2,3번 문제에 대한 API 입니다."
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "4. 브랜드 추가 API - 201. Location header 반환",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"New Brand\",\n    \"products\": [\n        {\n            \"category\": \"상의\",\n            \"price\": 10000\n        },\n        {\n            \"category\": \"바지\",\n            \"price\": 20000\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/v1/admin/brands",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"brands"
+							]
+						},
+						"description": "정상 처리시 201 Created 와 Location header 값을 반환합니다."
+					},
+					"response": []
+				},
+				{
+					"name": "4. 브랜드 업데이트 API - J 브랜드명을 Mutandard 로 업데이트",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Mutandard\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/v1/admin/brands/9",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"brands",
+								"9"
+							]
+						},
+						"description": "브랜드 이름만 업데이트하며 정상 처리시 204 No Content 를 잘못된 Path Parameter (없는 brand id) 인 경우, 400 Bad Request 를 응답합니다."
+					},
+					"response": []
+				},
+				{
+					"name": "4. 브랜드 업데이트 API - 상품과 함께 업데이트",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Mutandard\",\n    \"products\": [\n        {\n            \"id\": 65, // 브랜드 I 의 상의 제품\n            \"price\": 100\n        },\n        {\n            \"id\": 66, // 브랜드 I 의 아우터 제품\n            \"category\": \"액세서리\"\n        },\n        {\n            \"id\": 67, // 브랜드 I 의 바지 제품\n            \"category\": \"모자\",\n            \"price\": 200\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/v1/admin/brands/9",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"brands",
+								"9"
+							]
+						},
+						"description": "- 브랜드 이름과 상품 업데이트하며 정상 처리시 204 No Content 를 잘못된 Path Parameter (없는 brand id) 인 경우, 400 Bad Request 를 응답합니다.\n    \n- 없거나 매칭되지 않은 상품 id 인 경우 업데이트를 스킵합니다."
+					},
+					"response": []
+				},
+				{
+					"name": "4. 브랜드 삭제 API - H 브랜드 및 상품을 삭제",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/v1/admin/brands/8",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"brands",
+								"8"
+							]
+						},
+						"description": "- 정상 처리시 204 No Content 와 Location header 값을 반환합니다.\n    \n- 없는 brand_id 요청시 400 Bad Request 와 에러 메시지를 반환합니다."
+					},
+					"response": []
+				},
+				{
+					"name": "4. 상품 추가 API - 새로 추가된 브랜드에 상품을 추가",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"category\": \"양말\",\n    \"price\": 1200,\n    \"brand_id\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/v1/admin/products",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"products"
+							]
+						},
+						"description": "- 정상 처리시 201 Created 와 Location header 값을 반환합니다.\n    \n- 없는 brand_id 요청시 400 Bad Request 와 에러 메시지를 반환합니다."
+					},
+					"response": []
+				},
+				{
+					"name": "4. 상품 업데이트 API - 브랜드 A 의 상의 제품의 가격을 업데이트",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"price\": 29900\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/v1/admin/products/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"products",
+								"1"
+							]
+						},
+						"description": "- 정상 처리시 204 No Content 와 Location header 값을 반환합니다.\n    \n- 없는 product_id 요청시 400 Bad Request 와 에러 메시지를 반환합니다."
+					},
+					"response": []
+				},
+				{
+					"name": "4. 상품 삭제 API - A 브랜드의 액세서리를 삭제합니다.",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"category\": \"상의\",\n    \"price\": 12000,\n    \"brand_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/v1/admin/products/8",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"admin",
+								"products",
+								"8"
+							]
+						},
+						"description": "- 정상 처리시 204 No Content 와 Location header 값을 반환합니다.\n    \n- 없는 product_id 요청시 400 Bad Request 와 에러 메시지를 반환합니다."
+					},
+					"response": []
+				}
+			],
+			"description": "구현 4. 운영자를 위한 Admin API 입니다."
+		}
+	]
+}
