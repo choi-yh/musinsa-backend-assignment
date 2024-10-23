@@ -172,4 +172,11 @@ public class ProductService {
         productRepository.delete(product);
     }
 
+    public List<ProductDto> findAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(ProductDto::of)
+                .toList();
+    }
+
 }

@@ -56,7 +56,8 @@ git clone git@github.com:choi-yh/musinsa-backend-assignment.git && cd ./musinsa-
 ./gradlew build    # build
 ./gradlew bootRun  # run
 
-// TODO: 프론트 화면
+# 1,2,3번 문제에 대한 화면만 구성해놨으며, 4번 API 는 Postman 혹은 Swagger 에서 테스트 후 새로고침하여 화면에서 확인하실 수 있습니다.
+open localhost:8080 # 프론트엔드 페이지
 ```
 
 ### Test

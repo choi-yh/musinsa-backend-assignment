@@ -1,7 +1,6 @@
 package choiyh.musinsabackendassignment.controller;
 
 import choiyh.musinsabackendassignment.service.BrandService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,6 @@ public class BrandControllerTests {
 
     @MockBean
     private BrandService brandService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Test
     @DisplayName("2. 단일 브랜드로 모든 카테고리 상품 구매 시 최저가 브랜드와 카테고리별 상품 가격, 총액을 조회하는 API 테스트")
