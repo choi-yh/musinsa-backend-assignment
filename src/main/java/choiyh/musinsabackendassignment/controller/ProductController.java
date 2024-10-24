@@ -5,6 +5,7 @@ import choiyh.musinsabackendassignment.dto.product.LowestPriceBrandByCategoryRes
 import choiyh.musinsabackendassignment.enums.Category;
 import choiyh.musinsabackendassignment.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -38,7 +39,10 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "요청 성공", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "잘못된 카테고리 요청", content = @Content(mediaType = "application/json"))
     })
-    public LowestHighestPriceBrandByCategoryResponse getLowestHighestBrandByCategory(@PathVariable String category) {
+    public LowestHighestPriceBrandByCategoryResponse getLowestHighestBrandByCategory(
+            @Parameter(description = "조회 할 카테고리명", example = "상의")
+            @PathVariable String category
+    ) {
         Category categoryValue = Category.getCategoryFromKorean(category);
         return productService.getLowestHighestPriceBrandByCategory(categoryValue);
     }

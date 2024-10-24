@@ -1,5 +1,6 @@
 package choiyh.musinsabackendassignment.controller;
 
+import choiyh.musinsabackendassignment.dto.brand.AddBrandRequest;
 import choiyh.musinsabackendassignment.dto.product.AddProductRequest;
 import choiyh.musinsabackendassignment.dto.brand.UpdateBrandRequest;
 import choiyh.musinsabackendassignment.dto.product.UpdateProductRequest;
@@ -40,6 +41,25 @@ public class AdminControllerTests {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Test
+    @DisplayName("4. 브랜드 추가 API 성공 케이스 - 201 응답")
+    public void add_brand_success() throws Exception {
+        // given
+        Long expectedProductId = 1L;
+        when(brandService.add(any(AddBrandRequest.class))).thenReturn(1L);
+
+        // when
+        ResultActions response = mockMvc.perform(
+                post("/api/v1/admin/brands")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new AddBrandRequest()))
+        );
+
+        // then
+        response.andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.header().exists("Location"))
+                .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/api/v1/admin/brands/" + expectedProductId));
+    }
 
     @Test
     @DisplayName("4. 브랜드 수정 API 성공 케이스 - 204 응답")

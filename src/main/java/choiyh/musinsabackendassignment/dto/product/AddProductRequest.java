@@ -13,7 +13,7 @@ public class AddProductRequest {
     private String category;
     private Integer price;
 
-    @Schema(name = "brand_id")
+    @Schema(name = "brand_id", description = "단일 상품 요청 시에만 사용하며 브랜드 추가의 경우에는 빈 값으로 보냅니다.")
     private Long brandId;
 
     public static Product toEntity(AddProductRequest request) {
