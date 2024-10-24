@@ -2,6 +2,7 @@ package choiyh.musinsabackendassignment.controller;
 
 import choiyh.musinsabackendassignment.dto.product.LowestHighestPriceBrandByCategoryResponse;
 import choiyh.musinsabackendassignment.dto.product.LowestPriceBrandByCategoryResponse;
+import choiyh.musinsabackendassignment.enums.Category;
 import choiyh.musinsabackendassignment.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,7 +39,8 @@ public class ProductController {
             @ApiResponse(responseCode = "400", description = "잘못된 카테고리 요청", content = @Content(mediaType = "application/json"))
     })
     public LowestHighestPriceBrandByCategoryResponse getLowestHighestBrandByCategory(@PathVariable String category) {
-        return productService.getLowestHighestPriceBrandByCategory(category);
+        Category categoryValue = Category.getCategoryFromKorean(category);
+        return productService.getLowestHighestPriceBrandByCategory(categoryValue);
     }
 
 }

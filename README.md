@@ -63,16 +63,15 @@ open localhost:8080 # 프론트엔드 페이지
 
 ```
 # unit tests
-./gradlew clean test 
+./gradlew clean test &&
 open build/reports/tests/test/index.html # 테스트 결과 확인
 ```
 
 * 각 API 에 대한 테스트는 [Musinsa-backend-assignment.postman_collection.json](Musinsa-backend-assignment.postman_collection.json) 파일을 Postman 에서 Import 하거나
-[Swagger](#swagger) 에서 테스트 하실 수 있습니다.  
+  [Swagger](#swagger) 에서 테스트 하실 수 있습니다.
 * 제안드리고 싶은 테스트 방식은 Postman 을 Import 한 뒤, 서버 실행 후 순차적으로 Postman 으로 테스트하는 방법입니다.   
-각 API 별 결과를 `localhost:8080` 페이지에서 새로고침하여 확인하실 수 있습니다.   
-Postman 디렉토리 루트의 _View complete documentation_ 에 각 테스트에 대한 설명을 추가해놓았습니다.
-
+  각 API 별 결과를 `localhost:8080` 페이지에서 새로고침하여 확인하실 수 있습니다.   
+  Postman 디렉토리 루트의 _View complete documentation_ 에 각 테스트에 대한 설명을 추가해놓았습니다.
 
 ### ERD
 

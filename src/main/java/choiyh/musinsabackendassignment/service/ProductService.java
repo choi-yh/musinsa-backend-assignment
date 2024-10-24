@@ -82,15 +82,15 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public LowestHighestPriceBrandByCategoryResponse getLowestHighestPriceBrandByCategory(String category) throws CustomException {
+    public LowestHighestPriceBrandByCategoryResponse getLowestHighestPriceBrandByCategory(Category category) throws CustomException {
         LowestHighestPriceBrandByCategoryResponse result = new LowestHighestPriceBrandByCategoryResponse();
 
-        List<Product> products = productRepository.findByCategory(Category.getCategoryFromKorean(category)); // 잘못된 값인 경우 exception 발생
+        List<Product> products = productRepository.findByCategory(category);
 
         ProductDto lowestData = filterLowestPriceProduct(products);
         ProductDto highestData = filterHighestPriceProduct(products);
 
-        result.setCategory(category);
+        result.setCategory(category.toString());
         result.setLowestPrice(lowestData);
         result.setHighestPrice(highestData);
 

@@ -3,6 +3,7 @@ package choiyh.musinsabackendassignment.service;
 import choiyh.musinsabackendassignment.dto.product.LowestHighestPriceBrandByCategoryResponse;
 import choiyh.musinsabackendassignment.dto.product.LowestPriceBrandByCategoryResponse;
 import choiyh.musinsabackendassignment.dto.product.ProductDto;
+import choiyh.musinsabackendassignment.enums.Category;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,13 +59,13 @@ public class ProductServiceTests {
     @DisplayName("3. 카테고리 이름으로 최저, 최고 가격 브랜드와 상품 가격을 조회하는 비즈니스 로직 테스트")
     public void getLowestHighestPriceBrandByCategory() {
         // given
-        String category = "상의";
+        Category category = Category.TOP;
 
         // when
         LowestHighestPriceBrandByCategoryResponse result = productService.getLowestHighestPriceBrandByCategory(category);
 
         // then
-        assertEquals(category, result.getCategory());
+        assertEquals(category.toString(), result.getCategory());
 
         assertEquals("C", result.getLowestPrice().getBrandName());
         assertEquals("10,000", result.getLowestPrice().getPrice());
